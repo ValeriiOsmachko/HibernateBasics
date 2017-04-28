@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.ua.osmachko.entity.User" table="USERS">
+        <id name="id" type="int">
+            <column name="id"/>
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="name"/>
+        </property>
+        <component name="proteinData" >
+        <property name="total" type="int">
+            <column name="total"/>
+        </property>
+        <property name="goal" type="int">
+            <column name="goal"/>
+        </property>
+        </component>
+        <set name="history" table="USER_HISTORY">
+                <key column="ID"/>
+            <composite-element class="com.ua.osmachko.entity.UserHistory">
+                <property name="entryTime" type="date" column="ENTRY_TIME"/>
+                <property name="entry" type="string" column="ENTRY"/>
+            </composite-element>
+
+        </set>
+        <list name="listHistory" table="USER_HISTORY_LIST">
+            <key column="ID"/>
+            <list-index column="POSITION"/>
+            <composite-element class="com.ua.osmachko.entity.UserHistory">
+                <property name="entryTime" type="date" column="ENTRY_TIME"/>
+                <property name="entry" type="string" column="ENTRY"/>
+            </composite-element>
+
+        </list>
+        <map name="mapHistory" table="USER_HISTORY_MAP">
+            <key column="ID"/>
+            <map-key type="string" column="ENTRY_IDENTIFIER"/>
+            <composite-element class="com.ua.osmachko.entity.UserHistory">
+                <property name="entryTime" type="date" column="ENTRY_TIME"/>
+                <property name="entry" type="string" column="ENTRY"/>
+            </composite-element>
+        </map>
+        <idbag name="collectionHistory" table="USER_HISTORY_COLLECTION">
+            <collection-id column="ID" type="int">
+                <generator class="increment"/>
+            </collection-id>
+            <key column="USER_ID"/>
+            <composite-element class="com.ua.osmachko.entity.UserHistory">
+                <property name="entryTime" type="date" column="ENTRY_TIME"/>
+                <property name="entry" type="string" column="ENTRY"/>
+            </composite-element>
+        </idbag>
+        <list name="listUserHistroy" table="USER_HISTORY_ONE_TO_MANY" inverse="true" cascade="save-update">
+            <key column="USER_ID"/>
+            <list-index column="POSITION"/>
+            <one-to-many class="com.ua.osmachko.entity.UserHistory"/>
+        </list>
+
+    </class>
+</hibernate-mapping>
